@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: api_pipeline_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: data_pipeline
+      POSTGRES_USER: pipeline_user
+      POSTGRES_PASSWORD: pipeline_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pipeline_user -d data_pipeline"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:
